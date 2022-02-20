@@ -36,9 +36,9 @@ const Join = () => {
   console.log(errors);
 
   const onSubmit = (data) => {
-    console.log('Submitted', data);
+    // console.log('Submitted', data);
     setChatState(data);
-    navigate('/chat');
+    navigate(`/chat?name=${data.name}&room=${data.room}`);
   };
 
   return (
