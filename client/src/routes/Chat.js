@@ -9,11 +9,12 @@ let socket;
 const Chat = () => {
   const location = useLocation();
   const { chatState } = useChat();
-  console.log('chat context', chatState);
   const ENDPOINT = 'http://localhost:5000';
 
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState();
+  // effect for handling joining a room
   useEffect(() => {
-    // const { queryName, queryRoom } = queryString.parse(location.search);
     socket = io(ENDPOINT);
 
     socket.on('connect', () => {
@@ -21,7 +22,7 @@ const Chat = () => {
       console.log(socket);
     });
 
-    socket.emit('join', chatState);
+    socket.emit('join', chatState, () => {});
 
     return () => {
       socket.emit('disconnect');
@@ -29,9 +30,40 @@ const Chat = () => {
     };
   }, [chatState, ENDPOINT]);
 
+  // effect for handling messages
+  useEffect(() => {
+    socket.on('message', (newMessage) => {
+      console.log(newMessage);
+      setMessages([...messages, newMessage]);
+    });
+  }, [messages]);
+
+  // effect for sending messages
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (message) {
+      socket.emit('sendMessage', message, () => setMessage(''));
+    }
+  };
+
+  // console.log(message, messages);
+
   return (
     <div>
       <h1>Welcome to Chat</h1>
+      <input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyPress={(e) => (e.key === 'Enter' ? sendMessage(e) : null)}
+        style={{ border: '1px solid black' }}
+      />
+      <ul>
+        {messages.map((message) => (
+          <li>
+            {message.text} from {message.user}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
