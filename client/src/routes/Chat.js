@@ -36,6 +36,10 @@ const Chat = () => {
       console.log(newMessage);
       setMessages([...messages, newMessage]);
     });
+
+    return () => {
+      socket.off();
+    };
   }, [messages]);
 
   // effect for sending messages
