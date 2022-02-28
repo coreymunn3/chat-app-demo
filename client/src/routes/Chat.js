@@ -3,16 +3,20 @@ import { useLocation } from 'react-router-dom';
 import { useChat } from '../contexts/ChatContext';
 import queryString from 'query-string';
 import { io } from 'socket.io-client';
+import ChatHeader from '../components/chat-header/ChatHeader';
+import ChatInput from '../components/chat-input/ChatInput';
+import ChatConversation from '../components/chat-conversation/ChatConversation';
+import { Flex, Box } from '@chakra-ui/react';
 
 let socket;
 
 const Chat = () => {
   const location = useLocation();
-  const { chatState } = useChat();
+  const { chatState, conversation, setConversation } = useChat();
   const ENDPOINT = 'http://localhost:5000';
 
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState();
+  // const [messages, setMessages] = useState([]);
+  // const [message, setMessage] = useState();
   // effect for handling joining a room
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -34,41 +38,36 @@ const Chat = () => {
   useEffect(() => {
     socket.on('message', (newMessage) => {
       console.log(newMessage);
-      setMessages([...messages, newMessage]);
+      setConversation([...conversation, newMessage]);
     });
-
     return () => {
       socket.off();
     };
-  }, [messages]);
-
-  // effect for sending messages
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
-    }
-  };
-
-  // console.log(message, messages);
+  }, [conversation]);
 
   return (
-    <div>
-      <h1>Welcome to Chat</h1>
-      <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={(e) => (e.key === 'Enter' ? sendMessage(e) : null)}
-        style={{ border: '1px solid black' }}
-      />
-      <ul>
-        {messages.map((message) => (
-          <li>
-            {message.text} from {message.user}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Flex
+      w={['100%', '100%', 600]}
+      h='100vh'
+      margin='auto'
+      px={2}
+      direction={'column'}
+      justifyContent={'center'}
+    >
+      <Flex
+        border='1px solid'
+        borderColor={'teal.400'}
+        direction={'column'}
+        bgColor='blackAlpha.100'
+        borderRadius='md'
+        h='90%'
+        overflow={'hidden'}
+      >
+        <ChatHeader />
+        <ChatConversation />
+        <ChatInput socket={socket} />
+      </Flex>
+    </Flex>
   );
 };
 
