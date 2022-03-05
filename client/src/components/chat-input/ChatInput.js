@@ -4,7 +4,7 @@ import { Flex, FormControl, Input } from '@chakra-ui/react';
 import SendButton from '../send-button/SendButton';
 
 const ChatInput = (props) => {
-  const { socket } = props;
+  const { socket, inputProps, ...rest } = props;
   const { message, setMessage, conversation } = useChat();
 
   const handleChange = (e) => setMessage(e.target.value);
@@ -18,7 +18,13 @@ const ChatInput = (props) => {
   };
 
   return (
-    <Flex direction={'row'} h='3rem'>
+    <Flex
+      direction={'row'}
+      h='3rem'
+      borderTop='1px solid'
+      borderTopColor={'teal.400'}
+      {...rest}
+    >
       <FormControl flex={1}>
         <Input
           borderRadius={0}
@@ -27,6 +33,7 @@ const ChatInput = (props) => {
           focusBorderColor='none'
           value={message}
           onChange={handleChange}
+          {...inputProps}
         />
       </FormControl>
       <SendButton onClick={sendMessage} />

@@ -58,7 +58,6 @@ const Chat = () => {
         border='1px solid'
         borderColor={'teal.400'}
         direction={'column'}
-        bgColor='blackAlpha.100'
         borderRadius='md'
         h='90%'
         overflow={'hidden'}
