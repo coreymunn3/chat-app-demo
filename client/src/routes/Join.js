@@ -28,7 +28,7 @@ const Join = () => {
   } = useForm({
     mode: 'onBlur',
     defaultValues: {
-      name: '',
+      user: '',
       room: '',
     },
   });
@@ -38,7 +38,7 @@ const Join = () => {
   const onSubmit = (data) => {
     // console.log('Submitted', data);
     setChatState(data);
-    navigate(`/chat?name=${data.name}&room=${data.room}`);
+    navigate(`/chat?user=${data.user}&room=${data.room}`);
   };
 
   return (
@@ -55,14 +55,14 @@ const Join = () => {
         </Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4}>
-            <FormControl isInvalid={errors?.name}>
+            <FormControl isInvalid={errors?.user}>
               <CustomInput
-                {...register('name', { required: 'Your Name is Required' })}
-                placeholder='Your Name'
+                {...register('user', { required: 'Your Name is Required' })}
+                placeholder='Your User Name'
                 variant='flushed'
               />
-              {errors.name && (
-                <FormErrorMessage>{errors?.name.message}</FormErrorMessage>
+              {errors.user && (
+                <FormErrorMessage>{errors?.user.message}</FormErrorMessage>
               )}
             </FormControl>
             <FormControl isInvalid={errors?.room}>
