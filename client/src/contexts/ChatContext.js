@@ -8,7 +8,7 @@ export const useChat = () => {
 
 export const ChatProvider = ({ children }) => {
   const [chatState, setChatState] = useState({
-    user: null,
+    name: null,
     room: null,
   });
   const [message, setMessage] = useState('');
