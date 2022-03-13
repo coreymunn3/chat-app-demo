@@ -16,7 +16,7 @@ const Chat = () => {
     roomAndUsers,
     setRoomAndUsers,
   } = useChat();
-  const ENDPOINT = 'http://localhost:5000';
+  const ENDPOINT = 'https://simple-chat-reactapp.herokuapp.com/';
 
   // effect for handling joining a room
   useEffect(() => {
