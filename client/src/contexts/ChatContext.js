@@ -13,6 +13,7 @@ export const ChatProvider = ({ children }) => {
   });
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([]);
+  const [roomAndUsers, setRoomAndUsers] = useState({});
 
   const providerValue = useMemo(
     () => ({
@@ -22,6 +23,8 @@ export const ChatProvider = ({ children }) => {
       setMessage,
       conversation,
       setConversation,
+      roomAndUsers,
+      setRoomAndUsers,
     }),
     [
       chatState,
@@ -30,6 +33,8 @@ export const ChatProvider = ({ children }) => {
       setMessage,
       conversation,
       setConversation,
+      roomAndUsers,
+      setRoomAndUsers,
     ]
   );
 

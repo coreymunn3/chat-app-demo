@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useChat } from '../contexts/ChatContext';
-import queryString from 'query-string';
 import { io } from 'socket.io-client';
 import ChatHeader from '../components/chat-header/ChatHeader';
 import ChatInput from '../components/chat-input/ChatInput';
@@ -11,12 +9,15 @@ import { Flex, Box } from '@chakra-ui/react';
 let socket;
 
 const Chat = () => {
-  const location = useLocation();
-  const { chatState, conversation, setConversation } = useChat();
+  const {
+    chatState,
+    conversation,
+    setConversation,
+    roomAndUsers,
+    setRoomAndUsers,
+  } = useChat();
   const ENDPOINT = 'http://localhost:5000';
 
-  // const [messages, setMessages] = useState([]);
-  // const [message, setMessage] = useState();
   // effect for handling joining a room
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -29,7 +30,6 @@ const Chat = () => {
     socket.emit('join', chatState, () => {});
 
     return () => {
-      socket.emit('disconnect');
       socket.off();
     };
   }, [chatState, ENDPOINT]);
@@ -37,9 +37,13 @@ const Chat = () => {
   // effect for handling messages
   useEffect(() => {
     socket.on('message', (newMessage) => {
-      console.log(newMessage);
       setConversation([...conversation, newMessage]);
     });
+
+    socket.on('roomData', (data) => {
+      setRoomAndUsers(data);
+    });
+
     return () => {
       socket.off();
     };
@@ -53,16 +57,19 @@ const Chat = () => {
       px={2}
       direction={'column'}
       justifyContent={'center'}
+      alignItems={'center'}
     >
+      {/* the chat window */}
       <Flex
         border='1px solid'
         borderColor={'teal.400'}
         direction={'column'}
         borderRadius='md'
         h='90%'
+        w='100%'
         overflow={'hidden'}
       >
-        <ChatHeader />
+        <ChatHeader socket={socket} />
         <ChatConversation />
         <ChatInput socket={socket} />
       </Flex>
