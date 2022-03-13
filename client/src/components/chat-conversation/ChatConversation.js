@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Box, Stack } from '@chakra-ui/react';
 import { useChat } from '../../contexts/ChatContext';
 import ChatMessage from '../chat-message/ChatMessage';
-import ScrollToBottom from 'react-scroll-to-bottom';
 
 const ChatConversation = (props) => {
   const { conversation, setConversation, chatState } = useChat();
+  const messagesEnd = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [conversation]);
+
   return (
     <Box flex={1} p={4} overflow={'auto'}>
       <Stack>
@@ -18,6 +27,7 @@ const ChatConversation = (props) => {
             currentUser={chatState.name}
           />
         ))}
+        <div ref={messagesEnd}></div>
       </Stack>
     </Box>
   );
