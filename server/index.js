@@ -35,8 +35,14 @@ io.on('connection', (socket) => {
       text: `${user.name} has joined`,
       time: new Date(),
     });
-    socket.join(user.room);
 
+    const usersInRoom = getUserInRoom(user.room);
+    socket.emit('roomData', {
+      room: user.room,
+      users: usersInRoom,
+    });
+
+    socket.join(user.room);
     callback();
   });
 
@@ -51,7 +57,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('a user disconnected');
+    const user = removeUser(socket.id);
+    if (user) {
+      console.log(`user ${user.name} disconnected from ${user.room}`);
+      io.to(user.room).emit('message', {
+        user: { name: 'admin' },
+        text: `${user.name} has left the room`,
+        time: new Date(),
+      });
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUserInRoom(user.room),
+      });
+    }
   });
 });
 
