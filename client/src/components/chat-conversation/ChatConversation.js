@@ -7,7 +7,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 const ChatConversation = (props) => {
   const { conversation, setConversation, chatState } = useChat();
   return (
-    <Box flex={1} p={4} overflow={'scroll'}>
+    <Box flex={1} p={4} overflow={'auto'}>
       <Stack>
         {conversation.map(({ user, text, time }, idx) => (
           <ChatMessage
