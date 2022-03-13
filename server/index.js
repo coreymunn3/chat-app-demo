@@ -74,6 +74,7 @@ io.on('connection', (socket) => {
 });
 
 app.use('/', require('./router'));
+app.use(cors);
 
 const PORT = process.env.PORT || 5000;
 
