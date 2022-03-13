@@ -22,10 +22,12 @@ import { useChat } from '../../contexts/ChatContext';
 const ChatHeader = (props) => {
   const { socket } = props;
   const navigate = useNavigate();
-  const { chatState, roomAndUsers } = useChat();
+  const { chatState, roomAndUsers, setConversation } = useChat();
   const { users: usersInRoom } = roomAndUsers;
 
   const disconnect = () => {
+    // clear conversation
+    setConversation([]);
     socket.disconnect();
     navigate('/');
   };
